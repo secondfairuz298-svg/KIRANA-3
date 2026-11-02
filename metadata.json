@@ -1,0 +1,6 @@
+{
+  "name": "KIRANA - Konseling Interaktif, Rekapitulasi, Asesmen, & Naungan Aman",
+  "description": "Platform digital terintegrasi untuk layanan bimbingan konseling sekolah (Guru BK & Siswa) serta direktori layanan konseling profesional independen (Konselor & Klien Umum).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

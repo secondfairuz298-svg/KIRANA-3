@@ -1,0 +1,86 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && request.auth.uid == userId;
+      allow delete: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // School classes created by Guru BK
+    match /classes/{classId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.teacherUid == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.teacherUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.teacherUid == request.auth.uid;
+    }
+
+    // Psychological Assessments
+    match /assessments/{assessmentId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Student Point Records
+    match /point_records/{recordId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // Social Gamification Quests
+    match /social_quests/{questId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.studentUid == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.studentUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.studentUid == request.auth.uid;
+    }
+
+    // Counseling Schedules
+    match /schedules/{scheduleId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // In-App Chat Messages
+    match /messages/{messageId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.senderUid == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.senderUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.senderUid == request.auth.uid;
+    }
+
+    // Meeting Rooms
+    match /meetings/{meetingId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.hostUid == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.hostUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.hostUid == request.auth.uid;
+    }
+  }
+}

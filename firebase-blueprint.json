@@ -1,0 +1,190 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account and profile data for KIRANA platform",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Full name with titles" },
+        "role": {
+          "type": "string",
+          "enum": ["guru_bk", "siswa", "konselor", "klien"],
+          "description": "User role in KIRANA"
+        },
+        "avatarUrl": { "type": "string", "description": "Profile picture URL or default avatar key" },
+        "studentId": { "type": "string", "description": "NISN or NIM for students" },
+        "schoolName": { "type": "string", "description": "School or institution name" },
+        "isDualRoleCounselor": { "type": "boolean", "description": "Whether Guru BK also acts as independent counselor" },
+        "counselorBio": { "type": "string", "description": "Counseling approach, style, and philosophy" },
+        "counselingSpecialties": { "type": "string", "description": "Comma separated specialties" },
+        "redCardRate": { "type": "string", "description": "Public consultation fee (Red Card rate)" },
+        "portfolioItems": { "type": "string", "description": "JSON serialized certificates, journals, and articles" },
+        "points": { "type": "number", "description": "Accumulated points for students" },
+        "joinedClassId": { "type": "string", "description": "Current school class room ID student is enrolled in" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of account creation" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp of last profile update" }
+      },
+      "required": ["uid", "email", "displayName", "role"]
+    },
+    "SchoolClass": {
+      "title": "SchoolClass",
+      "description": "Virtual classroom room managed by Guru BK",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique room ID" },
+        "teacherUid": { "type": "string", "description": "Guru BK UID who created the room" },
+        "teacherName": { "type": "string", "description": "Guru BK display name" },
+        "name": { "type": "string", "description": "Class name, e.g., X MIPA 1" },
+        "code": { "type": "string", "description": "Join code for QR code and link generation" },
+        "description": { "type": "string", "description": "Class description" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "teacherUid", "name", "code"]
+    },
+    "AssessmentResult": {
+      "title": "AssessmentResult",
+      "description": "Comprehensive psychological test results",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Assessment record ID" },
+        "userId": { "type": "string", "description": "Student or client UID" },
+        "userName": { "type": "string", "description": "Student or client display name" },
+        "testType": {
+          "type": "string",
+          "enum": ["mbti_personality", "talents_interests", "learning_style", "mental_health"],
+          "description": "Category of psychological assessment"
+        },
+        "scoreSummary": { "type": "string", "description": "Summary output e.g. INFJ, RIASEC Artistic-Investigative, Visual-Kinestetik" },
+        "detailsJson": { "type": "string", "description": "Detailed trait breakdown and recommendations in JSON" },
+        "classId": { "type": "string", "description": "Associated class room ID if student" },
+        "completedAt": { "type": "string", "description": "Completion ISO timestamp" }
+      },
+      "required": ["id", "userId", "testType", "scoreSummary", "completedAt"]
+    },
+    "PointRecord": {
+      "title": "PointRecord",
+      "description": "Discipline or achievement points awarded or deducted by Guru BK or through gamification",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Point transaction ID" },
+        "studentUid": { "type": "string", "description": "Target student UID" },
+        "studentName": { "type": "string", "description": "Target student name" },
+        "classId": { "type": "string", "description": "Class room ID" },
+        "amount": { "type": "number", "description": "Positive or negative point delta" },
+        "category": { "type": "string", "description": "prestasi, pelanggaran, or quest" },
+        "reason": { "type": "string", "description": "Written reason for point change" },
+        "isAlert": { "type": "boolean", "description": "True if substantial drop triggers automatic counseling notice" },
+        "recordedBy": { "type": "string", "description": "Guru BK name or system" },
+        "createdAt": { "type": "string", "description": "Timestamp" }
+      },
+      "required": ["id", "studentUid", "amount", "reason", "createdAt"]
+    },
+    "SocialQuest": {
+      "title": "SocialQuest",
+      "description": "Gamification activity: peer photo and name tagging to gain social points",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Quest submission ID" },
+        "studentUid": { "type": "string", "description": "Submitting student UID" },
+        "studentName": { "type": "string", "description": "Student name" },
+        "peerName": { "type": "string", "description": "Name of peer/senior/junior photographed" },
+        "peerGrade": { "type": "string", "description": "Grade or relation e.g. Teman Sebaya, Kakak Kelas" },
+        "photoUrl": { "type": "string", "description": "Photo representation or uploaded image" },
+        "note": { "type": "string", "description": "Brief positive interaction note" },
+        "pointsAwarded": { "type": "number", "description": "Points earned e.g. 15" },
+        "createdAt": { "type": "string", "description": "Timestamp" }
+      },
+      "required": ["id", "studentUid", "peerName", "pointsAwarded", "createdAt"]
+    },
+    "CounselingSchedule": {
+      "title": "CounselingSchedule",
+      "description": "Face-to-face or digital counseling session booking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Schedule ID" },
+        "counselorUid": { "type": "string", "description": "Guru BK or Counselor UID" },
+        "counselorName": { "type": "string", "description": "Guru BK or Counselor name" },
+        "clientUid": { "type": "string", "description": "Student or client UID" },
+        "clientName": { "type": "string", "description": "Student or client name" },
+        "sessionDate": { "type": "string", "description": "Date of meeting e.g. 2026-11-05" },
+        "sessionTime": { "type": "string", "description": "Time slot e.g. 09:30 - 10:30 WIB" },
+        "location": { "type": "string", "description": "Ruang BK Sekolah or Virtual Meeting Room" },
+        "topic": { "type": "string", "description": "Consultation topic or objective" },
+        "status": {
+          "type": "string",
+          "enum": ["scheduled", "completed", "rescheduled", "cancelled"],
+          "description": "Appointment status"
+        },
+        "notes": { "type": "string", "description": "Confidential post-session counselor notes" },
+        "createdAt": { "type": "string", "description": "Timestamp" }
+      },
+      "required": ["id", "counselorUid", "clientUid", "sessionDate", "sessionTime", "status"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Direct 1-on-1 message between Guru BK/Student or Counselor/Client",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Message ID" },
+        "conversationId": { "type": "string", "description": "Composite conversation identifier" },
+        "senderUid": { "type": "string", "description": "Sender UID" },
+        "senderName": { "type": "string", "description": "Sender display name" },
+        "recipientUid": { "type": "string", "description": "Recipient UID" },
+        "text": { "type": "string", "description": "Message body" },
+        "timestamp": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["id", "conversationId", "senderUid", "recipientUid", "text", "timestamp"]
+    },
+    "MeetingRoom": {
+      "title": "MeetingRoom",
+      "description": "In-app secure group video conference room",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Meeting room ID" },
+        "hostUid": { "type": "string", "description": "Host user UID" },
+        "hostName": { "type": "string", "description": "Host name" },
+        "title": { "type": "string", "description": "Meeting room title" },
+        "passcode": { "type": "string", "description": "Room passcode" },
+        "category": { "type": "string", "description": "Kelas, Konseling Kelompok, Tematik" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "hostUid", "title", "passcode", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Collection of user accounts across all roles"
+    },
+    "/classes/{classId}": {
+      "schema": "SchoolClass",
+      "description": "School classes managed by Guru BK"
+    },
+    "/assessments/{assessmentId}": {
+      "schema": "AssessmentResult",
+      "description": "Assessment records for students and general clients"
+    },
+    "/point_records/{recordId}": {
+      "schema": "PointRecord",
+      "description": "Points journal for student achievements and discipline notes"
+    },
+    "/social_quests/{questId}": {
+      "schema": "SocialQuest",
+      "description": "Peer socialization photo submissions"
+    },
+    "/schedules/{scheduleId}": {
+      "schema": "CounselingSchedule",
+      "description": "Counseling session bookings and records"
+    },
+    "/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Real-time 1-on-1 counseling messages"
+    },
+    "/meetings/{meetingId}": {
+      "schema": "MeetingRoom",
+      "description": "Zoom-style in-app group counseling conferences"
+    }
+  }
+}
